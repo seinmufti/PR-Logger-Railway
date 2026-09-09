@@ -1,0 +1,6 @@
+.venv
+flask_session
+__pycache__
+pr_logger
+*.db
+.git

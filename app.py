@@ -1,16 +1,21 @@
+import os
+
 from flask import Flask, flash, redirect, render_template, request, url_for
-from flask_session import Session
 from cs50 import SQL
+import db_init
 import helpers
 import json
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "pr-logger-vercel-secret")
 
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+if os.environ.get("VERCEL"):
+    db_path = "/tmp/pr_logger.db"
+else:
+    db_path = "pr_logger.db"
 
-db = SQL("sqlite:///pr_logger.db")
+db_init.init_db(db_path)
+db = SQL(f"sqlite:///{db_path}")
 
 @app.after_request
 def after_request(response):
